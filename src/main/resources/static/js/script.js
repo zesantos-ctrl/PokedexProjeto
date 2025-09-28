@@ -7,6 +7,10 @@ const input = document.querySelector('.input__search');
 const buttonPrev = document.querySelector('.btn-prev');
 const buttonNext = document.querySelector('.btn-next');
 
+// Novo: botão de características e container de detalhes
+const buttonDetails = document.querySelector('.btn-details');
+const detailsContainer = document.querySelector('.pokemon__details');
+
 let searchPokemon = 1;
 
 const fetchPokemon = async (pokemon) => {
@@ -23,6 +27,7 @@ const fetchPokemon = async (pokemon) => {
 const renderPokemon = async (pokemon) => {
   pokemonName.innerHTML = 'Loading...';
   pokemonNumber.innerHTML = '';
+  detailsContainer.innerHTML = ''; // limpa detalhes quando troca de Pokémon
 
   const data = await fetchPokemon(pokemon);
 
@@ -39,6 +44,22 @@ const renderPokemon = async (pokemon) => {
     pokemonNumber.innerHTML = '';
   }
 }
+
+// Novo: evento para mostrar características
+buttonDetails.addEventListener('click', async () => {
+  if (!pokemonName.innerHTML || pokemonName.innerHTML === 'Not found :c') return;
+
+  const data = await fetchPokemon(searchPokemon);
+  if (!data) return;
+
+  // Mostra os detalhes do Pokémon (height, weight, types, abilities)
+  detailsContainer.innerHTML = `
+    <p><strong>Altura:</strong> ${data.height}</p>
+    <p><strong>Peso:</strong> ${data.weight}</p>
+    <p><strong>Tipos:</strong> ${data.types.join(', ')}</p>
+    <p><strong>Habilidades:</strong> ${data.abilities.join(', ')}</p>
+  `;
+});
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();

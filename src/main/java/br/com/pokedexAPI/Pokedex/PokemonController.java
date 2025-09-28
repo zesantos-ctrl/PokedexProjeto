@@ -48,6 +48,21 @@ public class PokemonController {
             Map animated = (Map) blackWhite.get("animated");
             String animatedUrl = (String) animated.get("front_default");
 
+            /// Tipos
+            List<Map<String, Map<String, String>>> typesList = (List<Map<String, Map<String, String>>>) response.get("types");
+            List<String> types = typesList.stream()
+                    .map(t -> t.get("type").get("name"))
+                    .toList();
+
+            // Habilidades
+            List<Map<String, Map<String, String>>> abilitiesList = (List<Map<String, Map<String, String>>>) response.get("abilities");
+            List<String> abilities = abilitiesList.stream()
+                    .map(a -> a.get("ability").get("name"))
+                    .toList();
+
+            int height = (int) response.get("height");
+            int weight = (int) response.get("weight");
+
             // Retorna a animada
             return new Pokemon(id, name, animatedUrl);
         }).collect(Collectors.toList());
