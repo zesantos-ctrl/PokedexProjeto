@@ -1,3 +1,4 @@
+/* Fonte e reset */
 @import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&display=swap');
 
 * {
@@ -9,9 +10,7 @@
 
 body {
   text-align: center;
-  background: url("https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9rJUMzJUE5bW9ufGVufDB8fDB8fHww");
-  background-size: cover; /* faz a imagem cobrir toda a tela */
-  background-position: center; /* centraliza a imagem */
+  background: url("https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=1000&auto=format&fit=crop&q=60") no-repeat center/cover;
   min-height: 100vh;
 }
 
@@ -95,31 +94,48 @@ main {
   font-size: 0.9rem;
 }
 
-/* Botão de características estilo círculo com "?" */
+/* Botão "!" redondo */
 .btn-details {
   position: absolute;
-  top: 9%;
-  right: 20%;
-  width: 40px;        /* largura do botão */
-  height: 40px;       /* altura igual à largura -> círculo */
-  display: flex;      /* usamos flex para centralizar */
-  align-items: center; /* alinha verticalmente */
-  justify-content: center; /* alinha horizontalmente */
-  border-radius: 50%;  /* círculo perfeito */
+  top: 10%;
+  right: 15%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   border: 2px solid #000;
   background-color: #ff3e3e;
   color: white;
   font-weight: bold;
-  font-size: 1.3rem;   /* tamanho do "?" */
+  font-size: 1.5rem;
+  text-align: center;
+  line-height: 36px; /* centraliza o "!" verticalmente */
   cursor: pointer;
   box-shadow: -2px 3px 0 #222, -4px 6px 0 #000;
   transition: all 0.2s ease;
 }
 
-.btn-details:hover {
-  background-color: #ff6666;
+.btn-details:active {
+  box-shadow: inset -2px 2px 0 #222;
 }
 
-.btn-details:active {
-  box-shadow: inset -3px 3px 0 #222;
+/* Container de detalhes */
+.pokemon__details {
+  position: absolute;
+  top: 15%;
+  right: 15%;
+  width: 200px;
+  background: white;
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.pokemon__details.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }

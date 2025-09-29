@@ -1,10 +1,10 @@
 package br.com.pokedexAPI.Pokedex;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import java.util.Map;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/pokemon")
@@ -13,58 +13,86 @@ public class PokemonController {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String API_URL = "https://pokeapi.co/api/v2/pokemon/";
+    private final String SPECIES_URL = "https://pokeapi.co/api/v2/pokemon-species/";
 
-    // Buscar um Pokémon por ID ou nome
     @GetMapping("/{idOrName}")
-    public Pokemon getPokemon(@PathVariable String idOrName) {
-        Map response = restTemplate.getForObject(API_URL + idOrName.toLowerCase(), Map.class);
-        if (response == null) return new Pokemon(0, "desconhecido", "");
+    public Features getPokemon(@PathVariable String idOrName) {
+        try {
+            Map<String, Object> resp = restTemplate.getForObject(API_URL + idOrName.toLowerCase(), Map.class);
+            if (resp == null) return emptyFeatures();
 
-        int id = (int) response.get("id");
-        String name = (String) response.get("name");
-        // Pega a imagem front_default dentro do campo sprites
-        Map sprites = (Map) response.get("sprites");
-        String imageUrl = (String) sprites.get("front_default");
+            int id = ((Number) resp.get("id")).intValue();
+            String name = (String) resp.get("name");
 
-        return new Pokemon(id, name, imageUrl);
-    }
+            // Imagem (tenta animada, senão front_default)
+            String image = Optional.ofNullable((Map<?, ?>) resp.get("sprites"))
+                    .map(sprites -> ((Map<?, ?>)((Map<?, ?>)((Map<?, ?>)((Map<?, ?>)sprites.get("versions"))
+                            .get("generation-v"))
+                            .get("black-white"))
+                            .get("animated"))
+                            .get("front_default"))
+                    .map(Object::toString)
+                    .orElseGet(() -> Optional.ofNullable((Map<?, ?>) resp.get("sprites"))
+                            .map(sprites -> sprites.get("front_default"))
+                            .map(Object::toString)
+                            .orElse(""));
 
-    // Buscar lista de Pokémon com apenas ID, nome e imagem
-    @GetMapping("/all")
-    public List<Pokemon> getAllPokemon(@RequestParam(defaultValue = "20") int limit) {
-        Map response = restTemplate.getForObject(API_URL + "?limit=" + limit, Map.class);
-        List<Map<String, String>> results = (List<Map<String, String>>) response.get("results");
-
-        return results.stream().map(p -> {
-            Map pDetails = restTemplate.getForObject(p.get("url"), Map.class);
-            int id = (int) pDetails.get("id");
-            String name = (String) pDetails.get("name");
-
-            // Pega a imagem animada
-            Map sprites = (Map) pDetails.get("sprites");
-            Map versions = (Map) sprites.get("versions");
-            Map genV = (Map) versions.get("generation-v");
-            Map blackWhite = (Map) genV.get("black-white");
-            Map animated = (Map) blackWhite.get("animated");
-            String animatedUrl = (String) animated.get("front_default");
-
-            /// Tipos
-            List<Map<String, Map<String, String>>> typesList = (List<Map<String, Map<String, String>>>) response.get("types");
-            List<String> types = typesList.stream()
+            // Tipos
+            List<String> types = ((List<Map<String, Map<String, String>>>) resp.getOrDefault("types", List.of()))
+                    .stream()
                     .map(t -> t.get("type").get("name"))
                     .toList();
 
             // Habilidades
-            List<Map<String, Map<String, String>>> abilitiesList = (List<Map<String, Map<String, String>>>) response.get("abilities");
-            List<String> abilities = abilitiesList.stream()
-                    .map(a -> a.get("ability").get("name"))
+            List<String> abilities = ((List<Map<String, Map<String, String>>>) resp.getOrDefault("abilities", List.of()))
+                    .stream()
+                    .map(a -> {
+                        Map<String, String> abilityMap = a.get("ability");
+                        String abilityName = abilityMap.get("name");
+                        String abilityUrl = abilityMap.get("url");
+                        try {
+                            Map abilityResp = restTemplate.getForObject(abilityUrl, Map.class);
+                            List<Map<String, Object>> effects = (List<Map<String, Object>>) abilityResp.get("effect_entries");
+                            String effect = effects.stream()
+                                    .filter(e -> ((Map)e.get("language")).get("name").equals("en"))
+                                    .map(e -> (String) e.get("short_effect"))
+                                    .findFirst()
+                                    .orElse("");
+                            return abilityName + " - " + effect;
+                        } catch (Exception ex) {
+                            return abilityName;
+                        }
+                    })
                     .toList();
 
-            int height = (int) response.get("height");
-            int weight = (int) response.get("weight");
+            int height = ((Number) resp.getOrDefault("height", 0)).intValue();
+            int weight = ((Number) resp.getOrDefault("weight", 0)).intValue();
 
-            // Retorna a animada
-            return new Pokemon(id, name, animatedUrl);
-        }).collect(Collectors.toList());
+            // Species: descrição e cor
+            Map<String, Object> speciesResp = restTemplate.getForObject(SPECIES_URL + name, Map.class);
+            String description = "";
+            String color = "unknown";
+            if (speciesResp != null) {
+                List<Map<String, Object>> flavorEntries = (List<Map<String, Object>>) speciesResp.getOrDefault("flavor_text_entries", List.of());
+                description = flavorEntries.stream()
+                        .filter(f -> ((Map)f.get("language")).get("name").equals("en"))
+                        .map(f -> ((String)f.get("flavor_text")).replace("\n"," ").replace("\f"," "))
+                        .findFirst()
+                        .orElse("");
+
+                Map colorMap = (Map) speciesResp.get("color");
+                if (colorMap != null) color = (String) colorMap.get("name");
+            }
+
+            return new Features(id, name, image, height, weight, types, abilities, description, color);
+
+        } catch (RestClientException ex) {
+            return emptyFeatures();
+        }
+    }
+
+    private Features emptyFeatures() {
+        return new Features(0, "desconhecido", "", 0, 0,
+                List.of(), List.of(), "", "unknown");
     }
 }

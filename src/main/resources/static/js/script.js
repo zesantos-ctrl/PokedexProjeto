@@ -7,35 +7,36 @@ const input = document.querySelector('.input__search');
 const buttonPrev = document.querySelector('.btn-prev');
 const buttonNext = document.querySelector('.btn-next');
 
-// Novo: botão de características e container de detalhes
 const buttonDetails = document.querySelector('.btn-details');
 const detailsContainer = document.querySelector('.pokemon__details');
 
 let searchPokemon = 1;
 
+// Função para buscar Pokémon na API
 const fetchPokemon = async (pokemon) => {
   try {
-    const APIResponse = await fetch(`http://localhost:8080/api/pokemon/${pokemon}`);
-    if (APIResponse.status === 200) {
-      return await APIResponse.json();
-    }
-  } catch (error) {
-    console.error("Erro ao buscar Pokémon:", error);
+    const response = await fetch(`http://localhost:8080/api/pokemon/${pokemon}`);
+    if (response.ok) return await response.json();
+  } catch (err) {
+    console.error("Erro ao buscar Pokémon:", err);
   }
-}
+  return null;
+};
 
+// Renderiza Pokémon na tela
 const renderPokemon = async (pokemon) => {
   pokemonName.innerHTML = 'Loading...';
   pokemonNumber.innerHTML = '';
-  detailsContainer.innerHTML = ''; // limpa detalhes quando troca de Pokémon
+  detailsContainer.classList.remove('active');
+  detailsContainer.innerHTML = '';
 
   const data = await fetchPokemon(pokemon);
 
-  if (data && data.id !== 0) {
+  if (data && data.id) {
     pokemonImage.style.display = 'block';
     pokemonName.innerHTML = data.name;
     pokemonNumber.innerHTML = data.id;
-    pokemonImage.src = data.imageUrl;
+    pokemonImage.src = data.image || data.imageUrl || '';
     input.value = '';
     searchPokemon = data.id;
   } else {
@@ -43,39 +44,26 @@ const renderPokemon = async (pokemon) => {
     pokemonName.innerHTML = 'Not found :c';
     pokemonNumber.innerHTML = '';
   }
-}
+};
 
-// Novo: evento para mostrar características
+// Evento botão detalhes
 buttonDetails.addEventListener('click', async () => {
-  if (!pokemonName.innerHTML || pokemonName.innerHTML === 'Not found :c') return;
-
   const data = await fetchPokemon(searchPokemon);
   if (!data) return;
 
-  // Mostra os detalhes do Pokémon (height, weight, types, abilities)
   detailsContainer.innerHTML = `
-    <p><strong>Altura:</strong> ${data.height}</p>
-    <p><strong>Peso:</strong> ${data.weight}</p>
-    <p><strong>Tipos:</strong> ${data.types.join(', ')}</p>
-    <p><strong>Habilidades:</strong> ${data.abilities.join(', ')}</p>
+    <p><strong>Altura:</strong> ${data.height || 'N/A'}</p>
+    <p><strong>Peso:</strong> ${data.weight || 'N/A'}</p>
+    <p><strong>Tipos:</strong> ${data.types && data.types.length > 0 ? data.types.join(', ') : 'N/A'}</p>
+    <p><strong>Habilidades:</strong> ${data.abilities && data.abilities.length > 0 ? data.abilities.join(', ') : 'N/A'}</p>
   `;
+  detailsContainer.classList.add('active');
 });
 
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-  renderPokemon(input.value.toLowerCase());
-});
+// Eventos de navegação
+form.addEventListener('submit', e => { e.preventDefault(); renderPokemon(input.value.toLowerCase()); });
+buttonPrev.addEventListener('click', () => { if (searchPokemon > 1) renderPokemon(--searchPokemon); });
+buttonNext.addEventListener('click', () => { renderPokemon(++searchPokemon); });
 
-buttonPrev.addEventListener('click', () => {
-  if (searchPokemon > 1) {
-    searchPokemon -= 1;
-    renderPokemon(searchPokemon);
-  }
-});
-
-buttonNext.addEventListener('click', () => {
-  searchPokemon += 1;
-  renderPokemon(searchPokemon);
-});
-
+// Inicializa primeiro Pokémon
 renderPokemon(searchPokemon);
