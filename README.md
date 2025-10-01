@@ -46,7 +46,7 @@ Construir uma Pokédex funcional que permite visualizar informações sobre dife
 ## 🖼️ Demonstração
 
 <p align="center">
-  <img src="[https://i.imgur.com/seu-gif-aqui.gif](https://imgur.com/a/6cSeZ68)" alt="Demonstração da Pokédex" width="300"/>
+  <img src="https://imgur.com/64lha9J.gif" alt="Demonstração da Pokédex" width="300"/>
 </p>
 
 <p align="center">Demonstração da interface da Pokédex em funcionamento</p>
