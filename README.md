@@ -1,6 +1,6 @@
 <!-- Banner -->
 <p align="center">
-  <img src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" alt="Banner Pokedex" width="400"/>
+  <img src="<img width="1024" height="1024" alt="Generated Image October 01, 2025 - 10_40AM" src="https://github.com/user-attachments/assets/03e39116-8a5e-4a5f-961b-ed9a18b23655" width="400"/>
 </p>
 
 <h1 align="center">📘 Pokédex - Projeto em Equipe</h1>
