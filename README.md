@@ -1,6 +1,6 @@
 <!-- Banner -->
 <p align="center">
-  <img src="<img width="1024" height="1024" alt="Generated Image October 01, 2025 - 10_40AM" src="https://github.com/user-attachments/assets/03e39116-8a5e-4a5f-961b-ed9a18b23655" width="400"/>
+  <img src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png" alt="Banner Pokedex" width="400"/>
 </p>
 
 <h1 align="center">📘 Pokédex - Projeto em Equipe</h1>
@@ -30,10 +30,10 @@
 
 ## 👨‍💻 Integrantes da Equipe
 
-- 👤 Integrante 1 – *[Seu nome aqui]*  
-- 👤 Integrante 2 – *[Nome do colega]*  
-- 👤 Integrante 3 – *[Nome do colega]*  
-- 👤 Integrante 4 – *[Nome do colega]*  
+- 👤 Integrante 1 – *(https://github.com/zesantos-ctrl)*  
+- 👤 Integrante 2 – *(https://github.com/fbini)*  
+- 👤 Integrante 3 – *(https://github.com/JuuhSouza)*  
+- 👤 Integrante 4 – *(https://github.com/Gabrielcomk)*  
 
 ---
 
@@ -43,7 +43,7 @@ Construir uma Pokédex funcional que permite visualizar informações sobre dife
 
 ---
 
-## 🖼️ Demonstração (opcional)
+## 🖼️ Demonstração 
 
 Você pode incluir aqui prints ou GIFs da aplicação em funcionamento.
 
