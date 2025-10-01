@@ -44,7 +44,10 @@ Construir uma Pokédex funcional que permite visualizar informações sobre dife
 ---
 
 ## 🖼️ Demonstração 
-
+<p align="center">
+  <img src="![Pokedex](https://github.com/user-attachments/assets/dfcd6e94-f8a1-4894-97ab-e10a8fafd0ea)
+" alt="Demonstração da Pokédex" width="300"/>
+</p>
 Você pode incluir aqui prints ou GIFs da aplicação em funcionamento.
 
 ---
