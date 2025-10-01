@@ -30,10 +30,10 @@
 
 ## 👨‍💻 Integrantes da Equipe
 
-- 👤 Integrante 1 – *(https://github.com/zesantos-ctrl)*  
-- 👤 Integrante 2 – *(https://github.com/fbini)*  
-- 👤 Integrante 3 – *(https://github.com/JuuhSouza)*  
-- 👤 Integrante 4 – *(https://github.com/Gabrielcomk)*  
+- 👤 [zesantos-ctrl](https://github.com/zesantos-ctrl)  
+- 👤 [fbini](https://github.com/fbini)  
+- 👤 [JuuhSouza](https://github.com/JuuhSouza)  
+- 👤 [Gabrielcomk](https://github.com/Gabrielcomk)  
 
 ---
 
@@ -43,17 +43,19 @@ Construir uma Pokédex funcional que permite visualizar informações sobre dife
 
 ---
 
-## 🖼️ Demonstração 
+## 🖼️ Demonstração
+
 <p align="center">
-  <img src="![Pokedex](https://github.com/user-attachments/assets/dfcd6e94-f8a1-4894-97ab-e10a8fafd0ea)
-" alt="Demonstração da Pokédex" width="300"/>
+  <img src="https://i.imgur.com/seu-gif-aqui.gif" alt="Demonstração da Pokédex" width="300"/>
 </p>
-Você pode incluir aqui prints ou GIFs da aplicação em funcionamento.
+
+<p align="center">Demonstração da interface da Pokédex em funcionamento</p>
 
 ---
 
 ## 📦 Como Executar
 
-1. Clone o repositório
+1. Clone o repositório:
+
 ```bash
 git clone https://github.com/seu-usuario/nome-do-repo.git
